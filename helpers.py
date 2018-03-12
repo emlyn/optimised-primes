@@ -9,7 +9,7 @@ from bokeh.models.widgets import Button, Panel, Paragraph, Slider, Tabs, Toggle
 from bokeh.palettes import Category10
 from bokeh.plotting import figure
 from collections import OrderedDict
-from IPython.display import Javascript
+from IPython.display import display, Javascript
 from itertools import count, islice
 from math import log
 from timeit import timeit
@@ -18,8 +18,10 @@ from timeit import timeit
 def getint(name, default):
     return int(os.environ.get(name, str(default)))
 
+
 def getbool(name, default):
     return os.environ.get(name, str(default)).lower() == 'true'
+
 
 def null_func():
     "Wrapper that does nothing, so we can estimate timing overhead"
@@ -40,9 +42,11 @@ def iterations():
         for i in (1, 2, 5):
             yield i * 10 ** x
 
+
 def approx_nth(n):
     "Return a number greater or equal to nth prime for sieve type algorithms"
     return int(2.2 * n + 1) if n < 6 else int(n * (log(n) + log(log(n))))
+
 
 def plot_line_separate(genfn, source, handle):
     "Time a generator while plotting result, using a separate generator for each point"
@@ -65,10 +69,13 @@ def plot_line_separate(genfn, source, handle):
             if r == 0:
                 # First time through keep going until just over 1 second elapsed
                 # with a slight buffer in case following measurements bring it down
-                if t >= 1.2: break
+                if t >= 1.2:
+                    break
             else:
                 # On following passes remeasure each existing point
-                if n >= len(source.data['x']) - 1: break
+                if n >= len(source.data['x']) - 1:
+                    break
+
 
 def plot_line_combined(genfn, source, handle):
     "Time a generator while plotting result, using a single generator for the line"
@@ -103,14 +110,18 @@ def plot_line_combined(genfn, source, handle):
             if r == 0:
                 # First time through keep going until just over 1 second elapsed
                 # with a slight buffer in case following measurements bring it down
-                if last_t > 1.2: break
+                if last_t > 1.2:
+                    break
             else:
                 # On following passes remeasure each existing point
-                if n >= len(source.data['x']) - 1: break
+                if n >= len(source.data['x']) - 1:
+                    break
+
 
 def timing_plot(genfn):
     "Draw a timing plot for a prime generator function"
     global _lines
+
     def plot(fig, name, vals, num, dash='solid'):
         "Add a line with points to a plot"
         col = _palette[num % len(_palette)]
@@ -119,7 +130,7 @@ def timing_plot(genfn):
     name = genfn.__name__
     exist = None
     args = dict(plot_width=800, plot_height=400, toolbar_location='above', title="Timing")
-    linfig = figure(y_range=[0,1], x_range=DataRange1d(start=0), **args)
+    linfig = figure(y_range=[0, 1], x_range=DataRange1d(start=0), **args)
     logfig = figure(y_range=[1e-6, 1], x_range=DataRange1d(start=1),
                     x_axis_type='log', y_axis_type='log', **args)
     num = 0
@@ -139,7 +150,7 @@ def timing_plot(genfn):
         fig.xgrid.minor_grid_line_alpha = 0.2
         fig.yaxis.axis_label = "Seconds"
         fig.legend.location = 'bottom_right'
-        fig.legend.click_policy='hide'
+        fig.legend.click_policy = 'hide'
         fig.legend.background_fill_alpha = 0.5
     linfig.yaxis.formatter = BasicTickFormatter()
     logfig.yaxis.formatter = BasicTickFormatter(use_scientific=True, precision=0)
@@ -164,17 +175,21 @@ def timing_plot(genfn):
     # save line data to show on next plot
     _lines[name] = source.data
 
+
 def primes_clear():
     global _lines
     _lines = OrderedDict()
+
 
 def primes_incremental(enabled):
     global _incremental
     _incremental = enabled
 
+
 def primes_repeats(num):
     global _repeats
     _repeats = num
+
 
 _init_js = '''
 require(['base/js/namespace', 'base/js/events'],
@@ -226,6 +241,7 @@ function (Jupyter, events) {
 });
 '''
 
+
 def init():
     output_notebook()
     display(Javascript(_init_js))
@@ -239,4 +255,3 @@ def init():
         [clearbutton, Paragraph(text='Clear timing plots and cell outputs (before restarting slideshow).')],
         [increm, Paragraph(text='Update timing plots incrementally (disable for static slide show).')],
         [repeats, Paragraph(text='Repeats for timing measurements (higher is more accurate, but slower).')]]))
-
