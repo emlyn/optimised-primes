@@ -1,4 +1,4 @@
-notebook==5.4.0
+notebook==5.4.1
 rise==5.2.0
 bokeh==0.12.14
 pyprimesieve==0.1.6
