@@ -24,4 +24,4 @@ and in the browser window that opens click on `Primes.ipynb` to load the noteboo
 
 Evaluate the first cell (select it then press `shift+Enter` or `ctrl+Enter`), and then click the
 <img src="resources/show.png" width="34" height="25" alt="RISE Slideshow button"> "Enter/Exit RISE Slideshow"
-button to start.
+button (or press `alt-r`) to start.
