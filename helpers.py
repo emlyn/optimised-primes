@@ -204,6 +204,14 @@ function (Jupyter, events) {
     // to avoid clearing it later (which would remove this js)
     var this_cell = $(element).closest('.cell').data('cell');
 
+    function clickable_sieve() {
+        // Make sieve clickable to start gif
+        sieve.src = 'resources/sieve1.png';
+        sieve.onclick = function() {
+            swap_src(document.getElementById('sieve'), 'resources/sieve.gif', 37000);
+        };
+    }
+
     function primes_clear() {
         // Call Python callback
         Jupyter.notebook.kernel.execute('from helpers import primes_clear\\n' +
@@ -214,12 +222,8 @@ function (Jupyter, events) {
                 cell.clear_output();
             }
         });
+        clickable_sieve();
         Jupyter.notebook.set_dirty(true);
-        // Make sieve clickable to start gif
-        sieve.src = 'resources/sieve1.png';
-        sieve.onclick = function() {
-            swap(document.getElementById('sieve'), 'resources/sieve.gif', 37000);
-        };
     }
 
     function primes_incremental(enabled) {
@@ -235,6 +239,7 @@ function (Jupyter, events) {
                                         'primes_repeats(' + num + ')');
     }
 
+    clickable_sieve();
     window.primes_clear = primes_clear;
     window.primes_incremental = primes_incremental;
     window.primes_repeats = primes_repeats;
