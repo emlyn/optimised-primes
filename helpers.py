@@ -125,8 +125,8 @@ def timing_plot(genfn):
     def plot(fig, name, vals, num, dash='solid'):
         "Add a line with points to a plot"
         col = _palette[num % len(_palette)]
-        fig.line('x', 'y', legend=name, source=vals, line_dash=dash, color=col)
-        fig.scatter('x', 'y', legend=name, source=vals, marker='o', color=col)
+        fig.line('x', 'y', legend_label=name, source=vals, line_dash=dash, color=col)
+        fig.scatter('x', 'y', legend_label=name, source=vals, marker='o', color=col)
     name = genfn.__name__
     exist = None
     args = dict(plot_width=800, plot_height=400, toolbar_location='above', title="Timing")

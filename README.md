@@ -22,7 +22,7 @@ You can view a static version (i.e. the code has all been pre-evaluated) of the 
 If you want to run it interactively (i.e. evaluate the code yourself):
 
 - Clone this repo so that you have a copy of the code locally.
-- Run the `setup.sh` script to install dependencies and plugins (this only has to be done the first time).
+- Run the `pip install -r requirements.txt` to install dependencies (this only has to be done the first time).
 - Run `jupyter notebook` to start the notebook server.
 - In the browser window that opens click on `Primes.ipynb` to load the notebook.
 - Evaluate the first cell (select it then press `shift+Enter` or `ctrl+Enter`) to initialise notebook.
