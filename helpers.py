@@ -118,8 +118,26 @@ def plot_line_combined(genfn, source, handle):
                     break
 
 
+first25 = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97]
+
+def check_fn(genfn):
+    try:
+        data = genfn()
+    except TypeError:
+        data = genfn(100)
+    data = list(islice(data, 25))
+    if data != first25:
+        print(f"WARNING! Error in function {genfn.__name__}, first 25 primes are wrong!\n" +
+              f"Expecting: {first25}\n" +
+              f"Actual:    {data}")
+        return False
+    return True
+
 def timing_plot(genfn):
     "Draw a timing plot for a prime generator function"
+    if not check_fn(genfn):
+        return
+
     global _lines
 
     def plot(fig, name, vals, num, dash='solid'):
@@ -162,7 +180,12 @@ def timing_plot(genfn):
         # Incremental: show plot now, then incrementally add points
         handle = show(tabs, notebook_handle=True)
 
-    if genfn.__code__.co_argcount == 0:
+    try:
+        genfn()
+        combined = True
+    except TypeError:
+        combined = False
+    if combined:
         # Generate line in one go
         plot_line_combined(genfn, source, handle)
     else:
