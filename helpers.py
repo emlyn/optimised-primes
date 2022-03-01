@@ -1,11 +1,11 @@
 import os
 from bokeh.io import output_notebook, push_notebook, show
-from bokeh.layouts import layout
+from bokeh.layouts import column, layout
 from bokeh.models.callbacks import CustomJS
 from bokeh.models.formatters import BasicTickFormatter, NumeralTickFormatter
 from bokeh.models.ranges import DataRange1d
 from bokeh.models.sources import ColumnDataSource
-from bokeh.models.widgets import Button, Panel, Paragraph, Slider, Tabs, Toggle
+from bokeh.models.widgets import Button, Panel, Paragraph, Slider, Tabs, Toggle, Div
 from bokeh.palettes import Category10
 from bokeh.plotting import figure
 from collections import OrderedDict
@@ -250,13 +250,20 @@ function (Jupyter, events) {
 def init():
     output_notebook()
     display(Javascript(_init_js))
+    but = '<img src="resources/show.png" width="34" height="25" style="display: inline" alt="Slideshow button" title="Enter/Exit RISE Slideshow">'
+    txt = Div(text='<h2>You can now start the slideshow!</h3>' +
+                   f'<h3 style="margin: 0.5em 0;">Just click the RISE slideshow button above - the one that looks like: {but}<br/>' +
+                   '(or you can press alt+R on your keyboard instead if you prefer).</h3>')
     clearbutton = Button(label="Clear")
     clearbutton.js_on_click(CustomJS(code='primes_clear();'))
+    cleartext = Paragraph(text='Clear all plots and outputs (e.g. before restarting slideshow).')
     increm = Toggle(label='Incremental', active=True)
     increm.js_on_click(CustomJS(code='primes_incremental(cb_obj.active)'))
+    incremtext = Paragraph(text='Update timing plots incrementally (disable for static slide show).')
     repeats = Slider(start=1, end=10, value=3)
     repeats.js_on_change('value', CustomJS(code='primes_repeats(cb_obj.value)'))
-    show(layout([
-        [clearbutton, Paragraph(text='Clear timing plots and cell outputs (before restarting slideshow).')],
-        [increm, Paragraph(text='Update timing plots incrementally (disable for static slide show).')],
-        [repeats, Paragraph(text='Repeats for timing measurements (higher is more accurate, but slower).')]]))
+    repeatstext = Paragraph(text='Repeats for timing measurements (higher is more accurate, but slower).')
+    controls = layout([[clearbutton, cleartext],
+                       [increm, incremtext],
+                       [repeats, repeatstext]])
+    show(column(txt, controls, sizing_mode='stretch_width'))
